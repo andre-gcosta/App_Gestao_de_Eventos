@@ -1,0 +1,48 @@
+/* Importações do Tailwind */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilos globais */
+body {
+  @apply bg-gray-50 text-gray-800;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-bold;
+}
+
+button {
+  @apply cursor-pointer;
+}
+
+/* Event panels */
+.event-panel {
+  @apply text-xs p-1 rounded;
+}
+
+/* Modal styles */
+.modal {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50;
+}
+
+.modal-content {
+  @apply bg-white p-4 rounded shadow-lg w-full max-w-lg;
+}
+
+/* Lista de eventos */
+.session-patient-month-container {
+  @apply border rounded overflow-hidden mb-2;
+}
+
+.session-patient-month-header {
+  @apply flex justify-between items-center p-2 cursor-pointer bg-gray-200 hover:bg-gray-300;
+}
+
+.session-patient-events-list {
+  @apply overflow-hidden transition-all duration-300 ease-in-out;
+}
+
+.session-patient-event-item {
+  @apply flex justify-between items-center p-2 border-b last:border-b-0 hover:bg-gray-50;
+}

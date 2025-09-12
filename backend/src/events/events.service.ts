@@ -11,7 +11,7 @@ export class EventsService {
     }
 
     findAll() {
-        return this.prisma.event.findMany({ include: { user: true } });
+        return this.prisma.event.findMany({ include: { user: true }, orderBy: { startDate: 'asc' }, });
     }
 
     findOne(id: string) {
