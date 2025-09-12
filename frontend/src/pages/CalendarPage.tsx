@@ -11,6 +11,8 @@ import type { EventItem } from "../types/event";
 import { useCalendarEvents } from "../hooks/useCalendarEvents";
 import { useCalendarDate } from "../hooks/useCalendarDate";
 import type { ViewMode } from "../hooks/useCalendarDate";
+import { useAuth } from "../auth/AuthContext";
+import { redirect } from "react-router-dom";
 
 const CalendarPage: React.FC = () => {
   const { events, addEvent, editEvent, removeEvent } = useCalendarEvents();
@@ -31,7 +33,7 @@ const CalendarPage: React.FC = () => {
       endDate,
       location: "",
       status: "",
-      userId: 1,
+      //userId: 1,
     });
     setIsModalOpen(true);
   };
@@ -61,9 +63,11 @@ const CalendarPage: React.FC = () => {
     }
   };
 
+  const { logout } = useAuth();
+
   const handleLogout = () => {
-    console.log("Logout clicado");
-    // Implementar autenticação futuramente
+    logout();
+    window.location.href = '/login';
   };
 
   return (

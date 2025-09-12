@@ -1,39 +1,71 @@
-import React, { createContext, useState, useContext } from 'react';
-import type { ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import api from '../api/axios';
 
-interface AuthContextType {
-  token: string | null;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
-  isAuthenticated: boolean;
+interface User {
+    id: number;
+    name: string;
+    email: string;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+interface AuthContextProps {
+    user: User | null;
+    token: string | null;
+    login: (email: string, password: string) => Promise<void>;
+    register: (data: { name: string; email: string; password: string }) => Promise<void>;
+    logout: () => void;
+}
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
-  const login = async (email: string, password: string) => {
-    const response = await api.post('/auth/login', { email, password });
-    setToken(response.data.accessToken);
-    localStorage.setItem('token', response.data.accessToken);
-  };
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const [user, setUser] = useState<User | null>(null);
+    const [token, setToken] = useState<string | null>(null);
 
-  const logout = () => {
-    setToken(null);
-    localStorage.removeItem('token');
-  };
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        const storedToken = localStorage.getItem('token');
+        if (storedUser && storedToken) {
+            setUser(JSON.parse(storedUser));
+            setToken(storedToken);
+        }
+    }, []);
 
-  return (
-    <AuthContext.Provider value={{ token, login, logout, isAuthenticated: !!token }}>
-      {children}
-    </AuthContext.Provider>
-  );
+    const login = async (email: string, password: string) => {
+        const res = await api.post('/auth/login', { email, password });
+        const { accessToken, user } = res.data;
+        setUser(user);
+        setToken(accessToken);
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('token', accessToken);
+    };
+
+    const register = async (data: { name: string; email: string; password: string }) => {
+        const res = await api.post('/auth/register', data);
+        const { accessToken, user } = res.data;
+        setUser(user);
+        setToken(accessToken);
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('token', accessToken);
+    };
+
+    const logout = () => {
+        setUser(null);
+        setToken(null);
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+    };
+
+    return (
+        <AuthContext.Provider value={{ user, token, login, register, logout }}>
+        {children}
+        </AuthContext.Provider>
+    );
 };
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within AuthProvider');
-  return context;
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error('useAuth deve ser usado dentro de um AuthProvider');
+    }
+    return context;
 };
