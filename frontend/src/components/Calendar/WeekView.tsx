@@ -111,7 +111,9 @@ export default function WeekView({
                 ({ event, top, height, left, width }) => (
                   <div
                     key={event.id}
-                    ref={(el) => (eventRefs.current[event.id] = el)}
+                    ref={(el) => {
+                      eventRefs.current[event.id] = el;
+                    }}
                     onClick={(e) => {
                       e.stopPropagation();
                       onEdit(event);

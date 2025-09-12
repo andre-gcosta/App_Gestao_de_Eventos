@@ -76,7 +76,9 @@ export default function DayView({
         {positionedEvents.map(({ event, top, height, left, width }) => (
           <div
             key={event.id}
-            ref={(el) => (eventRefs.current[event.id] = el)}
+            ref={(el) => {
+              eventRefs.current[event.id] = el;
+            }}
             tabIndex={0}
             onClick={(e) => {
               e.stopPropagation();
