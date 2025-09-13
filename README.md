@@ -7,8 +7,9 @@ Aplicação web full stack para **gestão de eventos**, permitindo **criar, edit
 
 O projeto está dividido em duas partes:  
 - **Frontend:** React + TypeScript + Vite 
-- **Backend:** NestJS + Node.js + banco de dados relacional (PostgreSQL, mas pode ser adaptado)  
+- **Backend:** NestJS + Node.js + banco de dados relacional (PostgreSQL, mas pode ser adaptado) 
 
+Versão de produção: https://app-gestao-de-eventos-front.vercel.app
 
 ---
 
@@ -138,8 +139,6 @@ O frontend estará em 👉 http://localhost:5173
 - ⚪ Testes automatizados (unitários e integração)
 
 - ⚪ Melhorias em acessibilidade (teclado/ARIA)
-
-- ⚪ Deploy
 
 - ⚪ Ajustes pontuais
 
