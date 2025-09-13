@@ -4,8 +4,17 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  const allowedOrigins = [
+    'http://localhost:5173',
+    process.env.URL_FRONTEND
+  ];
+  
+  if (process.env.VERCEL_ENV === 'preview' && process.env.VERCEL_URL) {
+    allowedOrigins.push(`https://${process.env.VERCEL_URL}`);
+  }
+
   app.enableCors({
-    origin: [process.env.URL_FRONTEND, 'http://localhost:5173'],
+    origin: allowedOrigins,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
