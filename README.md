@@ -16,12 +16,14 @@ Versão de produção: https://app-gestao-de-eventos-front.vercel.app
 ## 🚀 Tecnologias utilizadas
 
 ### Frontend
-- [React 18](https://react.dev/) + [Vite](https://vitejs.dev/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Tailwind CSS](https://tailwindcss.com/)  
-- [Framer Motion](https://www.framer.com/motion/)  
-- [Lucide React](https://lucide.dev/)  
-- [date-fns](https://date-fns.org/)  
+- [React 18](https://react.dev/) + [Vite](https://vitejs.dev/) (Bibliotecas para interface e desenvolvimento)
+- [TypeScript](https://www.typescriptlang.org/) (Supuerset Javascript para tipagem estática)
+- [Tailwind CSS](https://tailwindcss.com/)  (Framework de utilitários de estilização)
+- [Framer Motion](https://www.framer.com/motion/)  (Biblioteca de animações)
+- [Lucide React](https://lucide.dev/)  (Ícones customizáveis)
+- [date-fns](https://date-fns.org/)  (Utilitários para formatação de datas)
+- [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)  (API nativa do navegador para transcrever comandos de voz)
+
 ### Backend
 - [NestJS](https://nestjs.com/) (Node.js Framework)
 - [Prisma](https://www.prisma.io/) (ORM)
@@ -29,6 +31,34 @@ Versão de produção: https://app-gestao-de-eventos-front.vercel.app
 - [JWT](https://www.npmjs.com/package/jsonwebtoken) + [Passport](http://www.passportjs.org/) (Autenticação)
 - [bcrypt](https://www.npmjs.com/package/bcrypt) (Hash de senhas)
 - [class-validator](https://docs.nestjs.com/techniques/validation) (Validação de DTOs)
+- [OpenAI API](https://platform.openai.com/docs/api-reference/introduction)  (Serviço de IA para interpretar prompts do usuário)
+- [chrono-node](https://www.npmjs.com/package/chrono-node)  (Biblioteca de parsing de datas em linguagem natural)
+
+---
+
+
+## 🧠 Criando Eventos com IA e Comando por Voz
+
+O aplicativo permite criar eventos automaticamente usando **inteligência artificial** a partir de **texto** ou **voz**.  
+
+### ✍️ 1. Criar evento via texto
+- Digite a descrição do evento no campo **"Criar evento via IA..."** no topo do calendário.  
+- Exemplo de prompt:
+  > Agendar reunião com a equipe na próxima terça-feira das 14h às 15h
+- Clique no botão **➡️ Enviar** para que a IA interprete o texto e crie o evento automaticamente.
+
+### 🎙️ 2. Criar evento via voz
+- Clique no botão de **microfone 🎤** ao lado do campo de IA.  
+- Fale o comando ou descrição do evento.  
+- Ao fim da fala, o evento será criado **automaticamente** sem precisar clicar no botão de enviar.
+- Exemplo de comando de voz:
+  > Marcar call com os diretores na segunda-feira das 10 às 11
+
+### ⚠️ Limites diários
+- Cada usuário pode fazer **até 10 requisições diárias** à IA.  
+- Caso o limite seja atingido, um alerta será exibido informando que **não é possível criar mais eventos via IA** naquele dia.
+
+💡 **Dica:** Use frases naturais como "reunião amanhã às 14h" ou "call com a equipe na sexta-feira das 10h às 11h" para que a IA interprete corretamente o evento.
 
 ---
 
@@ -66,6 +96,7 @@ Crie uma variável de ambiente .env na pasta backend:
 ```txt
 DATABASE_URL=postgresql://<usuario>:<senha>@localhost:5432/app_gestao_de_eventos
 JWT_SECRET=crie_um_secret_seguro!
+OPENAI_API_KEY=sua_key_para_api_da_openai
 ```
 
 Gerar Prisma e criar migration:
@@ -103,6 +134,10 @@ Instalar dependências:
 ```cmd
 npm install
 ```
+Crie uma variável de ambiente .env na pasta frontend:
+```txt
+VITE_API_BASE_URL=http://localhost:3000
+```
 
 Inicializar o servidor:
 ```cmd
@@ -116,6 +151,8 @@ O frontend estará em 👉 http://localhost:5173
 ## 🛠️ Funcionalidades
 
 - ✅ Criar, editar e excluir evento (título, descrição, local, início, fim)
+
+- ✅ Criação de evento por comando de voz e inteligência artificial
 
 - ✅ Visualização em formato Calendário (Mês, Semana, Dia)
 
