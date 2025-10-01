@@ -37,6 +37,7 @@ const EventModal: React.FC<Props> = ({ event, isOpen, onClose, onSave, onDelete 
   const [endDate, setEndDate] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
+  const [status, setStatus] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
   const modalRef = useRef<HTMLDivElement>(null);
@@ -49,6 +50,7 @@ const EventModal: React.FC<Props> = ({ event, isOpen, onClose, onSave, onDelete 
       setEndDate(toBrazilInput(new Date(event.endDate)));
       setLocation(event.location || "");
       setDescription(event.description || "");
+      setStatus(event.status || "");
     } else {
       const now = new Date();
       setTitle("");
@@ -57,6 +59,7 @@ const EventModal: React.FC<Props> = ({ event, isOpen, onClose, onSave, onDelete 
       setEndDate(toBrazilInput(defaultEnd));
       setLocation("");
       setDescription("");
+      setStatus("");
     }
     setErrors({});
     setTouched({});
@@ -101,7 +104,7 @@ const EventModal: React.FC<Props> = ({ event, isOpen, onClose, onSave, onDelete 
         endDate: end,
         location,
         description,
-        status: '',
+        status: status,
         userId: 1,
         },
         event?.id
@@ -184,6 +187,13 @@ const EventModal: React.FC<Props> = ({ event, isOpen, onClose, onSave, onDelete 
               onChange={(e) => setDescription(e.target.value)}
               className="w-full border rounded-lg p-2 resize-none"
               rows={3}
+            />
+            <label className="block text-sm font-medium">Status</label>
+            <input
+              type="text"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="w-full border rounded-lg p-2"
             />
           </div>
 
