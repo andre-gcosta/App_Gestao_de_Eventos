@@ -17,7 +17,7 @@ Versão de produção: https://app-gestao-de-eventos-front.vercel.app
 
 ### Frontend
 - [React 18](https://react.dev/) + [Vite](https://vitejs.dev/) (Bibliotecas para interface e desenvolvimento)
-- [TypeScript](https://www.typescriptlang.org/) (Supuerset Javascript para tipagem estática)
+- [TypeScript](https://www.typescriptlang.org/) (Superset Javascript para tipagem estática)
 - [Tailwind CSS](https://tailwindcss.com/)  (Framework de utilitários de estilização)
 - [Framer Motion](https://www.framer.com/motion/)  (Biblioteca de animações)
 - [Lucide React](https://lucide.dev/)  (Ícones customizáveis)
