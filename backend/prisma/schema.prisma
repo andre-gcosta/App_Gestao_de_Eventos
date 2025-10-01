@@ -31,3 +31,10 @@ model Event {
   userId         Int
   user           User     @relation("UserEvents", fields: [userId], references: [id])
 }
+
+model UserRequest {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  date      String   // YYYY-MM-DD
+  createdAt DateTime @default(now())
+}

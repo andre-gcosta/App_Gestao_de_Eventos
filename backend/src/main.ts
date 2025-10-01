@@ -19,6 +19,8 @@ async function bootstrap() {
     credentials: true,
   });
 
+  //app.useGlobalGuards(new RateLimiterGuard());
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
