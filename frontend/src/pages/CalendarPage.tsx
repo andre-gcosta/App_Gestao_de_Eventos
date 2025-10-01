@@ -5,21 +5,89 @@ import MonthView from "../components/Calendar/MonthView";
 import EventList from "../components/EventList";
 import EventModal from "../components/EventModal";
 import { AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, LogOut } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, LogOut, Mic, Send, Sparkles } from "lucide-react";
 
 import type { EventItem } from "../types/event";
 import { useCalendarEvents } from "../hooks/useCalendarEvents";
 import { useCalendarDate } from "../hooks/useCalendarDate";
 import type { ViewMode } from "../hooks/useCalendarDate";
 import { useAuth } from "../auth/AuthContext";
-import { redirect } from "react-router-dom";
+
+import api from "../api/axios";
 
 const CalendarPage: React.FC = () => {
-  const { events, addEvent, editEvent, removeEvent } = useCalendarEvents();
+  const { events, addEventFromAi ,addEvent, editEvent, removeEvent } = useCalendarEvents();
   const { currentDate, view, setView, handlePrev, handleNext, handleToday, getTitle } = useCalendarDate("month");
 
   const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [iaPrompt, setIaPrompt] = useState("");
+  const [loadingIa, setLoadingIa] = useState(false);
+
+
+  const handleIaSubmit = async () => {
+    if (!iaPrompt.trim()) return;
+    try {
+      setLoadingIa(true);
+      const res = await api.post("/ai/create-event", { prompt: iaPrompt });
+      if (res.data?.event) {
+        addEventFromAi(res.data.event);
+        setIaPrompt("");
+      }
+    } catch (err: any) {
+      console.error("Erro ao criar evento pela IA:", err);
+      if (err.response?.status === 403) {
+        alert("Você atingiu o limite diário de 10 requisições à IA. Tente novamente amanhã.");
+      } else {
+        alert("Falha ao criar evento pela IA");
+      }
+    } finally {
+      setLoadingIa(false);
+    }
+  };
+
+  const handleVoiceInput = () => {
+    if (!("webkitSpeechRecognition" in window)) {
+      alert("Seu navegador não suporta reconhecimento de voz");
+      return;
+    }
+
+    const recognition = new (window as any).webkitSpeechRecognition();
+    recognition.lang = "pt-BR";
+    recognition.interimResults = false; // só resultados finais
+    recognition.continuous = false; // encerra automaticamente após a fala
+    recognition.start();
+
+    recognition.onresult = async (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setIaPrompt(transcript);
+
+      try {
+        setLoadingIa(true);
+        const res = await api.post("/ai/create-event", { prompt: transcript });
+        if (res.data?.event) {
+          addEventFromAi(res.data.event);
+          setIaPrompt("");
+        }
+      } catch (err: any) {
+        console.error("Erro ao criar evento pela IA:", err);
+        if (err.response?.status === 403) {
+          alert("Você atingiu o limite diário de 10 requisições à IA. Tente novamente amanhã.");
+        } else {
+          alert("Falha ao criar evento pela IA");
+        }
+      } finally {
+        setLoadingIa(false);
+        recognition.stop();
+      }
+    };
+
+    recognition.onerror = (err: any) => {
+      console.error("Erro no reconhecimento de voz:", err);
+      recognition.stop();
+    };
+  };
 
   const handleCreate = (date?: Date) => {
     const now = date ? new Date(date) : new Date();
@@ -97,6 +165,23 @@ const CalendarPage: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
+            {/* Campo IA */}
+            <div className="flex items-center gap-1 bg-blue-50 border border-blue-300 rounded-lg px-2 py-1 shadow-sm focus-within:ring-2 focus-within:ring-blue-400 transition">
+              <Sparkles className="text-blue-600" size={18} />
+              <input
+                type="text"
+                value={iaPrompt}
+                onChange={e => setIaPrompt(e.target.value)}
+                placeholder="Criar evento via IA..."
+                className="bg-transparent outline-none px-1 text-sm w-40 sm:w-64"
+              />
+              <button onClick={handleIaSubmit} disabled={loadingIa} className="p-1 rounded hover:bg-blue-100 text-blue-600 transition">
+                <Send size={16} />
+              </button>
+              <button onClick={handleVoiceInput} className="p-1 rounded hover:bg-blue-100 text-blue-600 transition">
+                <Mic size={16} />
+              </button>
+            </div>
             {(["month", "week", "day", "list"] as ViewMode[]).map((mode) => (
               <button
                 key={mode}

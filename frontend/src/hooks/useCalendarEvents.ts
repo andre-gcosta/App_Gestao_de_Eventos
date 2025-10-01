@@ -23,6 +23,17 @@ export function useCalendarEvents() {
     }
   }, []);
 
+  const addEventFromAi = useCallback((event: EventItem) => {
+    setEvents(prev => [
+      ...prev,
+      {
+        ...event,
+        startDate: new Date(event.startDate),
+        endDate: new Date(event.endDate),
+      },
+    ]);
+  }, []);
+
   const addEvent = useCallback(
     async (event: Omit<EventItem, "id">) => {
       if (!user) throw new Error("Usuário não autenticado");
@@ -46,5 +57,5 @@ export function useCalendarEvents() {
     loadEvents();
   }, [loadEvents]);
 
-  return { events, loading, error, loadEvents, addEvent, editEvent, removeEvent };
+  return { events, loading, error, loadEvents, addEventFromAi, addEvent, editEvent, removeEvent };
 }
