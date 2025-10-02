@@ -43,7 +43,7 @@ api.interceptors.request.use(config => {
   // Se demorar mais de 3 segundos mostra o aviso
   timeoutId = setTimeout(() => {
     showServerWakingUpToast();
-  }, 30);
+  }, 3000);
 
   return config;
 });
